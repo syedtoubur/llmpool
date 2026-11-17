@@ -109,6 +109,8 @@ path = "models/Qwen3.5-9B-Q4_K_M.gguf"
 - `used_bytes`;
 - `method`;
 - `adapters`, a list of per-adapter details.
+- `limited_by`: `gpu_memory`, `system_ram_reserve`, `budget` or `none`;
+- `available_ram_bytes` and `reserve_bytes`.
 
 How `usable_bytes` is computed depends on `kind`:
 - **cuda:** NVML free − 512 MiB margin.
@@ -117,6 +119,8 @@ How `usable_bytes` is computed depends on `kind`:
 - **cpu:** psutil available − reserve.
 
 In every case the result is clamped to `>= 0` and to `memory_budget_mb`.
+
+Memory totals and usage are defined by source: **cuda** uses NVML total and used; **dgpu** uses DXGI DedicatedVideoMemory as total and PDH Dedicated Usage as used; **igpu** uses DedicatedVideoMemory + SharedSystemMemory as total and PDH Dedicated Usage + Shared Usage as used; **cpu** uses psutil total and total − available as used. For an igpu, `usable_bytes` is the minimum of SharedSystemMemory − shared usage and psutil available − reserve, clamped to at least zero and to the configured budget. `limited_by` names the term that made usable capacity smallest.
 
 ## Model catalogue (`ops/catalogue.json`)
 `{"version":"...","models":[{"model_id","repo","file","sha256","size_bytes","license","est_bytes_ctx8192","roles":["orchestrator","worker","background"]}]}`
