@@ -1,0 +1,32 @@
+{
+  // People who are allowed to use the pool. Replace this placeholder with real tailnet users.
+  "groups": {
+    "group:members": [
+      // Add member login names here, for example "alice@example.com".
+    ],
+  },
+  // The coordinator device is owned by tailnet administrators.
+  "tagOwners": {
+    "tag:coordinator": ["autogroup:admin"],
+  },
+  // These are the complete allow rules. Anything not listed here is denied by default.
+  "grants": [
+    {
+      "src": ["group:members"],
+      "dst": ["autogroup:member"],
+      "ip": ["tcp:8443"],
+    },
+    {
+      "src": ["group:members"],
+      "dst": ["tag:coordinator"],
+      "ip": ["tcp:8444"],
+    },
+    {
+      "src": ["tag:coordinator"],
+      "dst": ["autogroup:member"],
+      "ip": ["tcp:8443"],
+    },
+  ],
+  "ssh": [],
+}
+  // The gate's active port scan verifies effective access because policy test schemas are not reliable here.
