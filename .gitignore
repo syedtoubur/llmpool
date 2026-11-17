@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+*.egg-info/
+# runtime data and secrets: never commit
+data/
+models/
+bin/
+*.gguf
+*.key
+*.sqlite
+*.db
+reports/
+owner.toml
+.claude/settings.local.json
