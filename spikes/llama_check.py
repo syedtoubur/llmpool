@@ -132,9 +132,27 @@ class LlamaCheck:
         self.report["steps"].append(step)
         return step
 
+    def _github_token(self) -> str | None:
+        token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+        if token:
+            return token
+        if shutil.which("gh") is None:
+            return None
+        try:
+            result = self.run(["gh", "auth", "token"], capture_output=True, text=True, timeout=10)
+            return (result.stdout.strip() or None) if result.returncode == 0 else None
+        except (OSError, subprocess.SubprocessError):
+            return None
+
     def _get_release(self, tag: str) -> dict[str, Any]:
         url = f"{API}/tags/{tag}" if tag != "latest" else f"{API}/latest"
-        response = self.http.get(url, timeout=30, headers={"Accept": "application/vnd.github+json"})
+        headers = {"Accept": "application/vnd.github+json"}
+        token = self._github_token()
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+        response = self.http.get(url, timeout=30, headers=headers, follow_redirects=False)
+        if response.status_code in (403, 429):
+            raise ValueError("GitHub API rate limit hit; run `gh auth login` or set GITHUB_TOKEN")
         response.raise_for_status()
         return response.json()
 
