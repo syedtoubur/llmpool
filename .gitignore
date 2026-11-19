@@ -16,3 +16,4 @@ owner.toml
 .claude/settings.local.json
 .pytest_tmp*/
 .pytest-tmp/
+.claude/
