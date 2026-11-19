@@ -6,3 +6,4 @@ A private pool of friends' and family's devices in Dhaka. Each device serves loc
 - Install dev environment: `uv sync`
 - Tests: `uv run pytest`
 - Security gate: `uv run python -m security.gate`
+- Device B: [one-command Windows test bundle](docs/run-on-B.md)

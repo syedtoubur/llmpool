@@ -17,3 +17,5 @@ owner.toml
 .pytest_tmp*/
 .pytest-tmp/
 .claude/
+report_B_*.zip
+.uv-cache/
